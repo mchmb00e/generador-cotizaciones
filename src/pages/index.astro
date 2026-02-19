@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import FormularioCotizacion from '../components/FormularioCotizacion.jsx';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+---
+
+<Base title="Generador de Cotizaciones">
+  <main class="d-flex flex-column align-items-center bg-light min-vh-100">
+    <FormularioCotizacion client:load />
+  </main>
+</Base>

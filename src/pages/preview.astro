@@ -1,0 +1,115 @@
+---
+import PreviewCotizacion from '../components/PreviewCotizacion.jsx';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style is:global>
+        :root {
+            --primary-color: #536dfe; 
+            --secondary-bg: #e0e5ff; 
+            --text-color: #222;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: white; 
+            margin: 0;
+            padding: 0; 
+            color: var(--text-color);
+            display: flex;
+            justify-content: center; 
+        }
+
+        #contenido-pdf {
+            background: white;
+            width: 215.9mm;
+            min-height: 100vh; 
+            padding: 15mm 20mm;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-title {
+            text-align: center; font-size: 32px; font-weight: 800;
+            text-transform: uppercase; margin-bottom: 40px; margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header-section { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; line-height: 1.5; }
+        .header-left { flex: 1; }
+        .header-right { text-align: right; }
+        .data-line { margin-bottom: 2px; }
+        .label { font-weight: 700; color: #000; }
+        .divider { border-bottom: 2px solid #999; margin: 15px 0 25px 0; }
+        .receptor-section { font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+
+        .detail-separator { display: flex; align-items: center; margin: 20px 0; }
+        .detail-separator::before, .detail-separator::after { content: ''; flex: 1; border-bottom: 2px solid #999; }
+        .detail-separator span { padding: 0 15px; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        thead { display: table-header-group; }
+        tr { page-break-inside: avoid; }
+
+        thead tr { background-color: var(--primary-color); color: white; height: 40px; }
+        th { font-weight: 600; padding: 10px; text-align: center; }
+        th:nth-child(2) { text-align: left; padding-left: 20px; } 
+
+        tbody tr { height: 35px; }
+        td { padding: 8px 10px; color: #333; }
+        
+        tbody tr:nth-child(even) { background-color: var(--secondary-bg) !important; -webkit-print-color-adjust: exact; }
+        tbody tr:nth-child(odd) { background-color: #fff !important; }
+
+        td:nth-child(1), td:nth-child(3), td:nth-child(4), td:nth-child(5) { text-align: center; }
+        td:nth-child(2) { text-align: left; padding-left: 20px; }
+
+        .totals-section { margin-top: 10px; font-size: 14px; line-height: 1.6; margin-left: 20px; page-break-inside: avoid; }
+        .total-row { display: flex; gap: 5px; }
+        .total-final { font-weight: 800; font-size: 15px; margin-top: 2px; }
+        .obs-section { margin-top: 30px; font-size: 12px; border-top: 2px solid #999; padding-top: 20px; padding-bottom: 50px; page-break-inside: avoid; }
+
+        .fab {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #222; color: white;
+            padding: 15px 30px; border-radius: 8px; border: none;
+            font-weight: 700; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+            transition: all 0.2s; z-index: 999;
+        }
+        .fab:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); background: #000; }
+
+        @media print {
+            body { display: block; background: none; }
+            #contenido-pdf {
+                width: 100%; min-height: 0; height: auto;
+                margin: 0; padding: 0;
+            }
+            .no-print { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: letter; margin: 1.5cm; }
+        }
+    </style>
+</head>
+<body>
+    <PreviewCotizacion client:only="react" />
+</body>
+</html>
