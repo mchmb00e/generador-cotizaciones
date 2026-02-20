@@ -5,7 +5,5 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://mchmb00e.github.io',
-  base: '/generador-cotizaciones',
   integrations: [react()]
 });
