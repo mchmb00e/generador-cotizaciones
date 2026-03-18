@@ -129,7 +129,7 @@ export default function FormularioCotizacion() {
         };
 
         localStorage.setItem('cotizacionData', JSON.stringify(dataToSave));
-        window.open(`${import.meta.env.BASE_URL}/preview`, '_blank');
+        window.open(`https://generador-cotizaciones-gold.vercel.app/preview`, '_blank');
     };
 
     return (
