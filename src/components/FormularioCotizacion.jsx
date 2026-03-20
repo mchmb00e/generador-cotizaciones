@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+//const URL_PATH = "http://localhost:4321";
+const URL_PATH = "https://generador-cotizaciones-gold.vercel.app/";
+
 export default function FormularioCotizacion() {
     const [emisor, setEmisor] = useState({
         nombre: '', rut: '', responsable: '', telefono: '', email: ''
@@ -13,12 +16,15 @@ export default function FormularioCotizacion() {
         nombre: '', rut: '', direccion: '', telefono: '', email: ''
     });
 
+    // Ahora inicializamos con 'index' y 'unidad'
     const [items, setItems] = useState([
-        { id: Date.now(), desc: '', precio: 0, cant: 1 }
+        { id: Date.now(), index: 1, desc: '', unidad: '', precio: 0, cant: 1 }
     ]);
 
     const [noIva, setNoIva] = useState(false);
     const [observaciones, setObservaciones] = useState('');
+    // Nuevo estado para la columna de unidades
+    const [mostrarUnidades, setMostrarUnidades] = useState(false);
 
     const formatRut = (value) => {
         if (!value) return '';
@@ -81,7 +87,8 @@ export default function FormularioCotizacion() {
 
     const formatMoney = (amount) => '$' + Math.round(amount).toLocaleString('es-CL');
 
-    const agregarItem = () => setItems([...items, { id: Date.now(), desc: '', precio: 0, cant: 1 }]);
+    // Funciones nuevas y actualizadas pa' los items
+    const agregarItem = () => setItems([...items, { id: Date.now(), index: items.length + 1, desc: '', unidad: '', precio: 0, cant: 1 }]);
     const eliminarItem = (id) => setItems(items.filter(item => item.id !== id));
     
     const actualizarItem = (id, campo, valor) => {
@@ -95,6 +102,17 @@ export default function FormularioCotizacion() {
         nuevosItems[index] = nuevosItems[index + direccion];
         nuevosItems[index + direccion] = temp;
         setItems(nuevosItems);
+    };
+
+    // Funciones de ordenamiento
+    const reordenarIndices = () => {
+        const itemsOrdenados = [...items].sort((a, b) => a.index - b.index);
+        setItems(itemsOrdenados);
+    };
+
+    const reasignarIndices = () => {
+        const itemsReasignados = items.map((item, i) => ({ ...item, index: i + 1 }));
+        setItems(itemsReasignados);
     };
 
     const handleContinuar = () => {
@@ -112,9 +130,13 @@ export default function FormularioCotizacion() {
                 fecha: infoCot.fecha,
                 validez: `${infoCot.validezUnidad} ${infoCot.validezMedida}`
             },
-            items: items.map((item, i) => ({
-                index: i + 1,
+            opciones: {
+                mostrarUnidades // Guardamos la config pa' la previsualización
+            },
+            items: items.map((item) => ({
+                index: item.index,
                 desc: item.desc,
+                unidad: item.unidad,
                 precio: item.precio,
                 cant: item.cant,
                 total: item.precio * item.cant
@@ -129,7 +151,7 @@ export default function FormularioCotizacion() {
         };
 
         localStorage.setItem('cotizacionData', JSON.stringify(dataToSave));
-        window.open(`https://generador-cotizaciones-gold.vercel.app/preview`, '_blank');
+        window.open(`${URL_PATH}/preview`, '_blank');
     };
 
     return (
@@ -223,12 +245,17 @@ export default function FormularioCotizacion() {
 
             <div className="p-2">
                 <h2 className="fs-3">Servicios</h2>
+                
+                {/* Nueva barra de herramientas pa' los items */}
+                
+
                 <div className="table-responsive">
                     <table className="table table-bordered border-black align-middle" id="tabla-items">
                         <thead className="bg-body-secondary text-center">
                             <tr>
-                                <th style={{ width: '50px' }}>#</th>
+                                <th style={{ width: '80px' }}>#</th>
                                 <th>Descripción</th>
+                                {mostrarUnidades && <th style={{ width: '120px' }}>Unidad</th>}
                                 <th style={{ width: '150px' }}>Precio</th>
                                 <th style={{ width: '120px' }}>Cantidad</th>
                                 <th style={{ width: '150px' }}>Total</th>
@@ -238,10 +265,17 @@ export default function FormularioCotizacion() {
                         <tbody>
                             {items.map((item, index) => (
                                 <tr key={item.id}>
-                                    <td className="text-center fw-bold index-cell">{index + 1}</td>
+                                    <td className="text-center index-cell">
+                                        <input type="number" min="1" className="form-control border-0 bg-transparent text-center fw-bold" value={item.index} onChange={(e) => actualizarItem(item.id, 'index', parseInt(e.target.value) || 1)} />
+                                    </td>
                                     <td>
                                         <input type="text" className="form-control border-0 bg-transparent text-start input-desc" placeholder="Descripción" value={item.desc} onChange={(e) => actualizarItem(item.id, 'desc', e.target.value)} />
                                     </td>
+                                    {mostrarUnidades && (
+                                        <td>
+                                            <input type="text" className="form-control border-0 bg-transparent text-center input-unidad" placeholder="Ej: m2, kg" value={item.unidad} onChange={(e) => actualizarItem(item.id, 'unidad', e.target.value)} />
+                                        </td>
+                                    )}
                                     <td>
                                         <input type="number" min="0" className="form-control border-0 text-end input-precio" value={item.precio} onChange={(e) => actualizarItem(item.id, 'precio', parseFloat(e.target.value) || 0)} />
                                     </td>
@@ -264,10 +298,24 @@ export default function FormularioCotizacion() {
                     </table>
                 </div>
                 
-                <button type="button" className="btn btn-primary" id="btn-add-item" onClick={agregarItem}>
-                    + Añadir Item
-                </button>
-                
+                <div className="d-flex flex-wrap align-items-center gap-3 mb-3">
+                    <button type="button" className="btn btn-primary" id="btn-add-item" onClick={agregarItem}>
+                        + Añadir Item
+                    </button>
+                    <button type="button" className="btn btn-outline-secondary" onClick={reordenarIndices}>
+                        Reordenar índices
+                    </button>
+                    <button type="button" className="btn btn-outline-secondary" onClick={reasignarIndices}>
+                        Reasignar índices
+                    </button>
+                    <div className="form-check ms-auto me-2">
+                        <input className="form-check-input border-black" type="checkbox" id="chk-unidades" checked={mostrarUnidades} onChange={(e) => setMostrarUnidades(e.target.checked)} />
+                        <label className="form-check-label fw-bold" htmlFor="chk-unidades">
+                            Declarar unidades de medida
+                        </label>
+                    </div>
+                </div>
+
                 <div className="row mt-4">
                     <div className="col-7">
                         <div className="form-check mb-2">

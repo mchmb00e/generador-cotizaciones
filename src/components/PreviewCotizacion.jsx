@@ -44,6 +44,9 @@ export default function PreviewCotizacion() {
         return <div style={{ textAlign: 'center', marginTop: '50px' }}>Cargando cotización o no hay datos guardados...</div>;
     }
 
+    // Revisamos si en el form seleccionaron mostrar unidades
+    const mostrarUnidades = data.opciones?.mostrarUnidades;
+
     return (
         <>
             <div id="contenido-pdf">
@@ -85,17 +88,19 @@ export default function PreviewCotizacion() {
                     <thead>
                         <tr>
                             <th width="8%">#</th>
-                            <th width="40%">Descripción</th>
+                            <th width={mostrarUnidades ? "30%" : "40%"} max-width="40%">Descripción</th>
+                            {mostrarUnidades && <th width="10%">Unidad</th>}
                             <th width="12%">Cantidad</th>
                             <th width="20%">Precio</th>
                             <th width="20%">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.items.map((item) => (
-                            <tr key={item.index}>
+                        {data.items.map((item, i) => (
+                            <tr key={i}>
                                 <td>{item.index}</td>
                                 <td>{item.desc}</td>
+                                {mostrarUnidades && <td>{item.unidad}</td>}
                                 <td>{item.cant}</td>
                                 <td>{formatMoney(item.precio)}</td>
                                 <td>{formatMoney(item.total)}</td>
