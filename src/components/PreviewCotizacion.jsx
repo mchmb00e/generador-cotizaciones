@@ -8,7 +8,7 @@ export default function PreviewCotizacion() {
         if (dataStr) {
             const parsedData = JSON.parse(dataStr);
             setData(parsedData);
-            document.title = `Cotizacion_${parsedData.cotizacion.numero || 'Nueva'}`;
+            document.title = `Cotización generada`;
         }
     }, []);
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-//const URL_PATH = "http://localhost:4321";
-const URL_PATH = "https://generador-cotizaciones-gold.vercel.app/";
+const URL_PATH = "http://127.0.0.1:4321";
+//const URL_PATH = "https://generador-cotizaciones-gold.vercel.app/";
 
 export default function FormularioCotizacion() {
     const [emisor, setEmisor] = useState({
@@ -16,14 +16,14 @@ export default function FormularioCotizacion() {
         nombre: '', rut: '', direccion: '', telefono: '', email: ''
     });
 
-    // Ahora inicializamos con 'index' y 'unidad'
+    // Inicializamos con 'index' y 'unidad'
     const [items, setItems] = useState([
         { id: Date.now(), index: 1, desc: '', unidad: '', precio: 0, cant: 1 }
     ]);
 
     const [noIva, setNoIva] = useState(false);
     const [observaciones, setObservaciones] = useState('');
-    // Nuevo estado para la columna de unidades
+    // Estado para la columna de unidades
     const [mostrarUnidades, setMostrarUnidades] = useState(false);
 
     const formatRut = (value) => {
@@ -87,7 +87,7 @@ export default function FormularioCotizacion() {
 
     const formatMoney = (amount) => '$' + Math.round(amount).toLocaleString('es-CL');
 
-    // Funciones nuevas y actualizadas pa' los items
+    // Funciones pa' los items
     const agregarItem = () => setItems([...items, { id: Date.now(), index: items.length + 1, desc: '', unidad: '', precio: 0, cant: 1 }]);
     const eliminarItem = (id) => setItems(items.filter(item => item.id !== id));
     
@@ -126,7 +126,7 @@ export default function FormularioCotizacion() {
             },
             receptor,
             cotizacion: {
-                numero: infoCot.numero,
+                numero: String(infoCot.numero), // Aseguramos que se guarde como texto puro
                 fecha: infoCot.fecha,
                 validez: `${infoCot.validezUnidad} ${infoCot.validezMedida}`
             },
@@ -191,7 +191,7 @@ export default function FormularioCotizacion() {
                 <div className="d-flex flex-wrap flex-row align-items-center justify-content-between gap-2 mx-2">
                     <div className="input-width">
                         <label htmlFor="numero-cotizacion" className="form-label fw-bold">Número de cotización:</label>
-                        <input type="number" id="numero-cotizacion" className="form-control border border-black" value={infoCot.numero} onChange={e => setInfoCot({...infoCot, numero: e.target.value})} />
+                        <input type="text" id="numero-cotizacion" className="form-control border border-black" placeholder="Ej: 01-2026" value={infoCot.numero} onChange={e => setInfoCot({...infoCot, numero: e.target.value})} />
                     </div>
                     <div className="input-width">
                         <label htmlFor="fecha-cotizacion" className="form-label fw-bold">Fecha:</label>
@@ -246,9 +246,6 @@ export default function FormularioCotizacion() {
             <div className="p-2">
                 <h2 className="fs-3">Servicios</h2>
                 
-                {/* Nueva barra de herramientas pa' los items */}
-                
-
                 <div className="table-responsive">
                     <table className="table table-bordered border-black align-middle" id="tabla-items">
                         <thead className="bg-body-secondary text-center">
