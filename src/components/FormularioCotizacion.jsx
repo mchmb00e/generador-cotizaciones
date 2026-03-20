@@ -69,8 +69,8 @@ export default function FormularioCotizacion() {
                     nombre: "ITR ELECTROSTRUK SPA",
                     rut: formatRut("783458535"), 
                     responsable: "Juan Iturriaga",
-                    telefono: formatPhone("954011625"),
-                    email: "juan.iturriaga.contacto@gmail.com"
+                    telefono: formatPhone("929693649"),
+                    email: "ch.jujamu@gmail.com"
                 });
                 setInfoCot(prev => ({ ...prev, fecha: new Date().toISOString().split('T')[0] }));
                 keyBuffer = []; 
