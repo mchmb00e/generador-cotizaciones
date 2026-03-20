@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-const URL_PATH = "http://127.0.0.1:4321";
-//const URL_PATH = "https://generador-cotizaciones-gold.vercel.app/";
+//const URL_PATH = "http://127.0.0.1:4321";
+const URL_PATH = "https://generador-cotizaciones-gold.vercel.app";
 
 export default function FormularioCotizacion() {
     const [emisor, setEmisor] = useState({
